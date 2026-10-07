@@ -29,7 +29,7 @@ section{padding:90px 0;scroll-margin-top:90px}.head{margin-bottom:38px}.head sma
 footer{background:#17291d;color:#c5d0c8;padding:42px 0;font-size:13px}
 @media(max-width:900px){.navlinks{display:none}.quick,.cards{grid-template-columns:1fr 1fr}.steps{grid-template-columns:1fr 1fr}.aboutgrid,.two{grid-template-columns:1fr}.hero h1,.copy h1{font-size:50px}}
 @media(max-width:600px){.pill{display:none}.hero{background:linear-gradient(rgba(255,250,241,.9),rgba(255,250,241,.9)),url("hero.png") center/cover}.copy h1{font-size:43px}.quick,.cards,.steps,.fields{grid-template-columns:1fr}.full{grid-column:auto}}
-</style></head>
+.privacy-consent{background:#f8f5ef;border:1px solid var(--line);border-radius:10px;padding:16px}.privacy-consent label{display:flex;gap:9px;font-size:14px;line-height:1.6;cursor:pointer}.privacy-consent input[type="checkbox"]{width:18px;height:18px;margin-top:3px;flex:0 0 auto}.privacy-consent .summary,.sensitive-note{font-size:12px;color:#6f675e;margin:7px 0 0}.privacy-consent a,footer a{text-decoration:underline;text-underline-offset:3px}</style></head>
 <body>
 <header><div class="wrap nav"><a href="#home" class="logo">🌿 봄 <small>ART & PSYCHOLOGY COUNSELING</small></a>
 <nav class="navlinks"><a href="#about">센터소개</a><a href="#program">상담프로그램</a><a href="#process">상담과정</a><a href="#expert">전문가소개</a><a href="#space">공간안내</a><a href="#reserve">상담예약</a></nav>
@@ -81,11 +81,11 @@ footer{background:#17291d;color:#c5d0c8;padding:42px 0;font-size:13px}
 <div><label>연락처</label><input id="phone" name="phone" required inputmode="tel" maxlength="20" placeholder="010-0000-0000"></div>
 <div><label>상담 대상</label><select id="client_type" name="client_type"><option>유아</option><option>아동</option><option>청소년</option><option>성인</option><option>부모·가족</option></select></div>
 <div><label>희망 시간</label><input id="preferred_time" name="preferred_time" maxlength="100" placeholder="예: 평일 오후"></div>
-<div class="full"><label>문의 내용</label><textarea id="message" name="message" maxlength="1000" placeholder="궁금한 점이나 상담을 원하는 내용을 적어주세요."></textarea></div>
+<div class="full"><label>문의 내용</label><textarea id="message" name="message" maxlength="1000" placeholder="궁금한 점이나 상담을 원하는 내용을 간단히 적어주세요."></textarea><p class="sensitive-note">※ 진단명, 치료이력, 주민등록번호 등 민감하거나 불필요한 개인정보는 입력하지 마세요.</p></div><div class="full privacy-consent"><label><input id="privacy_agree" type="checkbox" required><span><b>[필수]</b> 개인정보 수집·이용에 동의합니다.</span></label><p class="summary">수집항목: 이름, 연락처, 상담대상, 희망시간, 문의내용 · 이용목적: 상담예약 접수 및 연락 · 보유기간: 센터 운영 기준 확정 후 개인정보처리방침에 명시합니다. 동의하지 않으면 온라인 상담예약을 이용할 수 없습니다. <a href="./privacy.html" target="_blank">개인정보처리방침 보기</a></p></div>
 <div class="full"><button class="submit" id="submitBtn" type="submit">상담 신청하기</button><div id="msg"></div></div>
 </div></form></div></section>
 </main>
-<footer><div class="wrap"><b>봄 미술심리상담센터</b><p>대표자 · 사업자정보 · 주소 · 전화번호는 실제 정보로 교체합니다.</p></div></footer>
+<footer><div class="wrap"><b>봄 미술심리상담센터</b><p>대표자 · 사업자정보 · 주소 · 전화번호는 실제 정보로 교체합니다.</p><p><a href="./privacy.html">개인정보처리방침</a></p></div></footer>
 <script>
 (function(){
   document.querySelectorAll('a[href^="#"]').forEach(function(link){
@@ -110,6 +110,8 @@ footer{background:#17291d;color:#c5d0c8;padding:42px 0;font-size:13px}
 
   form.addEventListener("submit", async function(e){
     e.preventDefault();
+    const privacyAgree=document.getElementById("privacy_agree");
+    if(!privacyAgree || !privacyAgree.checked){msg.style.color="#b3261e";msg.textContent="개인정보 수집·이용 동의가 필요합니다.";return;}
     msg.style.color = "#315936";
     msg.textContent = "상담 신청을 저장하고 있습니다...";
     btn.disabled = true;
