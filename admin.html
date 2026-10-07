@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>봄 미술심리상담센터 | 예약관리</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--g:#315936;--cream:#fffaf1;--line:#e7ddd0}*{box-sizing:border-box}
+body{margin:0;font-family:"Malgun Gothic","Noto Sans KR",sans-serif;background:#f8f5ef;color:#352e27}
+header{padding:18px 5%;background:#fff;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:22px;font-weight:700;color:var(--g)}.wrap{max-width:1150px;margin:35px auto;padding:0 20px}
+.panel,.stat,.tablebox{background:#fff;border:1px solid var(--line);border-radius:16px}.panel{padding:26px}
+.login{max-width:450px;margin:70px auto}.field{margin:14px 0}input,select,textarea{width:100%;padding:12px;border:1px solid #d8cfc2;border-radius:9px;font:inherit}
+button{border:0;border-radius:9px;padding:12px 17px;font:inherit;cursor:pointer}.primary{background:var(--g);color:#fff}.ghost{background:#eee8df}
+.login button{width:100%}.muted{color:#887b6c}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:22px 0}
+.stat{padding:17px}.stat b{display:block;font-size:27px;color:var(--g)}.toolbar{display:flex;justify-content:space-between;align-items:center;margin:15px 0}.toolbar select{max-width:180px}
+.tablebox{overflow:auto}table{width:100%;min-width:850px;border-collapse:collapse}th,td{padding:13px;border-bottom:1px solid #eee7dd;text-align:left}th{background:#faf7f2}
+.badge{padding:5px 9px;border-radius:999px;background:#edf3ec;color:var(--g);font-weight:700}.link{background:none;color:var(--g);font-weight:700}
+#detail{display:none;margin-top:20px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.full{grid-column:1/-1}.actions{display:flex;gap:9px;margin-top:15px}
+@media(max-width:700px){.stats{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}.full{grid-column:auto}}
+</style></head>
+<body>
+<header><div class="logo">🌿 봄 미술심리상담센터 · 예약관리</div><div><button id="refresh" class="ghost" style="display:none">새로고침</button> <button id="logout" class="ghost" style="display:none">로그아웃</button></div></header>
+<main class="wrap">
+<section id="loginView" class="panel login"><h1>상담사 로그인</h1><p class="muted">등록된 상담사 계정으로 로그인하세요.</p>
+<div class="field"><label>이메일</label><input id="email" type="email"></div><div class="field"><label>비밀번호</label><input id="password" type="password"></div>
+<button id="login" class="primary">로그인</button><p id="loginMsg"></p></section>
+<section id="adminView" style="display:none"><h1>상담 예약관리</h1><p class="muted">예약 확인 · 상태 변경 · 상담사 메모</p>
+<div class="stats"><div class="stat">전체<b id="all">0</b></div><div class="stat">신규<b id="new">0</b></div><div class="stat">연락완료<b id="contact">0</b></div><div class="stat">상담확정<b id="confirmed">0</b></div></div>
+<div class="toolbar"><strong>예약 목록</strong><select id="filter"><option value="전체">전체 상태</option><option>신규</option><option>연락완료</option><option>상담확정</option><option>취소</option></select></div>
+<div class="tablebox"><table><thead><tr><th>접수일</th><th>이름</th><th>연락처</th><th>대상</th><th>희망시간</th><th>상태</th><th></th></tr></thead><tbody id="rows"></tbody></table></div>
+<section id="detail" class="panel"><h2>예약 상세</h2><div class="grid">
+<div><label>이름</label><input id="dName" readonly></div><div><label>연락처</label><input id="dPhone" readonly></div>
+<div><label>상담 대상</label><input id="dType" readonly></div><div><label>희망시간</label><input id="dTime" readonly></div>
+<div class="full"><label>문의내용</label><textarea id="dMessage" rows="4" readonly></textarea></div>
+<div><label>진행상태</label><select id="dStatus"><option>신규</option><option>연락완료</option><option>상담확정</option><option>취소</option></select></div>
+<div class="full"><label>상담사 메모</label><textarea id="dMemo" rows="4"></textarea></div></div>
+<div class="actions"><button id="save" class="primary">변경사항 저장</button><button id="close" class="ghost">닫기</button></div><p id="msg"></p></section></section></main>
+<script>
+const U='https://xpodrlvjdkszgivdknbd.supabase.co';
+const K='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhwb2RybHZqZGtzemdpdmRrbmJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEzMTQ5MjQsImV4cCI6MjEwNjg5MDkyNH0.icm1gq9CuQZJONSEnMtqINDOpWkYVEMmmbmWqp6dG74';
+const sb=supabase.createClient(U,K), $=x=>document.getElementById(x);let data=[],selected=null;
+const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const date=v=>v?new Date(v).toLocaleString('ko-KR'):'';
+async function view(){const {data:{session}}=await sb.auth.getSession();$('loginView').style.display=session?'none':'block';$('adminView').style.display=session?'block':'none';$('logout').style.display=$('refresh').style.display=session?'inline-block':'none';if(session)load()}
+$('login').onclick=async()=>{const {error}=await sb.auth.signInWithPassword({email:$('email').value.trim(),password:$('password').value});$('loginMsg').textContent=error?'로그인에 실패했습니다. 이메일과 비밀번호를 확인하세요.':'';if(!error)view()}
+$('logout').onclick=async()=>{await sb.auth.signOut();view()};$('refresh').onclick=()=>load();$('filter').onchange=()=>render();
+async function load(){const {data:d,error}=await sb.from('bom_consultations').select('*').order('created_at',{ascending:false});if(error){alert('예약을 불러오지 못했습니다. 상담사 계정 권한을 확인하세요.');return}data=d||[];render()}
+function render(){$('all').textContent=data.length;$('new').textContent=data.filter(x=>x.status==='신규').length;$('contact').textContent=data.filter(x=>x.status==='연락완료').length;$('confirmed').textContent=data.filter(x=>x.status==='상담확정').length;let f=$('filter').value,a=f==='전체'?data:data.filter(x=>x.status===f);$('rows').innerHTML=a.map(x=>`<tr><td>${esc(date(x.created_at))}</td><td>${esc(x.name)}</td><td>${esc(x.phone)}</td><td>${esc(x.client_type)}</td><td>${esc(x.preferred_time||'-')}</td><td><span class="badge">${esc(x.status||'신규')}</span></td><td><button class="link" onclick="openD(${Number(x.id)})">상세보기</button></td></tr>`).join('')||'<tr><td colspan="7">예약이 없습니다.</td></tr>'}
+window.openD=id=>{let x=data.find(r=>Number(r.id)===Number(id));if(!x)return;selected=x.id;$('dName').value=x.name||'';$('dPhone').value=x.phone||'';$('dType').value=x.client_type||'';$('dTime').value=x.preferred_time||'';$('dMessage').value=x.message||'';$('dStatus').value=x.status||'신규';$('dMemo').value=x.counselor_memo||'';$('detail').style.display='block';$('detail').scrollIntoView({behavior:'smooth'})}
+$('close').onclick=()=>{$('detail').style.display='none'};$('save').onclick=async()=>{if(!selected)return;const {error}=await sb.from('bom_consultations').update({status:$('dStatus').value,counselor_memo:$('dMemo').value,updated_at:new Date().toISOString()}).eq('id',selected);$('msg').textContent=error?'저장에 실패했습니다.':'저장되었습니다.';if(!error)load()}
+view();
+</script></body></html>
