@@ -7,16 +7,18 @@
 :root{--g:#315936;--dg:#203b28;--gold:#b48c52;--cream:#fffaf1;--line:#e7ddcf;--ink:#342d25}
 *{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:90px}body{margin:0;font-family:"Malgun Gothic","Noto Sans KR",sans-serif;color:var(--ink);background:#fffdf9;line-height:1.7}a{text-decoration:none;color:inherit}.wrap{width:min(1180px,calc(100% - 36px));margin:auto}
 header{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.96);border-bottom:1px solid #eee}.nav{height:76px;display:flex;align-items:center;gap:26px}.logo{margin-right:auto;font-size:29px;color:var(--g);font-family:serif;font-weight:bold}.logo small{font-size:11px;color:#8e6d45;margin-left:10px}.navlinks{display:flex;gap:25px;font-size:14px}.navlinks a:hover{color:var(--g)}.pill{background:var(--g);color:white;padding:11px 19px;border-radius:999px}
-..hero{
+.hero{
   min-height:680px;
-  background-image:
-    linear-gradient(90deg,rgba(255,250,241,.96),rgba(255,250,241,.78) 40%,rgba(255,255,255,.05) 72%),
-    url("./hero.png");
-  background-position:center;
-  background-size:cover;
-  background-repeat:no-repeat;
+  background-image:url("./hero.png") !important;
+  background-position:center center !important;
+  background-size:cover !important;
+  background-repeat:no-repeat !important;
   display:flex;
   align-items:center;
+}
+
+.hero .copy{
+  visibility:hidden;
 }
 .quick{display:grid;grid-template-columns:repeat(5,1fr);border-bottom:1px solid var(--line)}.quick a{text-align:center;padding:28px 16px;border-right:1px solid var(--line);transition:.2s}.quick a:hover{background:#f8f3e9;transform:translateY(-2px)}.quick b{display:block;margin:6px}.quick span{font-size:13px;color:#777}
 section{padding:90px 0;scroll-margin-top:90px}.head{margin-bottom:38px}.head small{color:var(--gold);letter-spacing:.15em;font-weight:bold}.head h2{font-family:serif;color:var(--dg);font-size:40px;margin:7px 0}.head p{color:#777;max-width:760px}
