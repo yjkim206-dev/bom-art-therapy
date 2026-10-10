@@ -557,6 +557,39 @@ section[id]{scroll-margin-top:116px}
 }
 </style>
 
+
+<style>
+.topnav .top-phone{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  min-width:150px!important;
+  height:40px!important;
+  padding:0 16px!important;
+  border-radius:999px!important;
+  background:#245b36!important;
+  color:#fff!important;
+  font-size:14px!important;
+  font-weight:800!important;
+  text-decoration:none!important;
+  white-space:nowrap!important;
+  border:0!important;
+}
+.topnav .top-phone:hover{
+  background:#1f4f30!important;
+  color:#fff!important;
+  border-bottom-color:transparent!important;
+}
+@media(max-width:620px){
+  .topnav .top-phone{
+    min-width:136px!important;
+    height:34px!important;
+    padding:0 12px!important;
+    font-size:12px!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <header><div class="wrap nav">
@@ -570,7 +603,7 @@ section[id]{scroll-margin-top:116px}
   <a href="#process">상담과정</a>
   <a href="#expert">상담사소개</a>
   <a href="#space">오시는길</a>
-  <button type="button" id="topReservationBtn">상담예약</button>
+  <a class="top-phone" href="tel:01059632026" aria-label="010-5963-2026 전화하기">☎ 010-5963-2026</a>
 </nav>
 </div></header>
 
@@ -726,18 +759,6 @@ section[id]{scroll-margin-top:116px}
 })();
 </script>
 
-<script>
-document.addEventListener('DOMContentLoaded', function(){
-  const topBtn = document.getElementById('topReservationBtn');
-  const modal = document.getElementById('reservationModal');
-  if(topBtn && modal){
-    topBtn.addEventListener('click', function(){
-      modal.classList.add('is-open');
-      modal.setAttribute('aria-hidden','false');
-      document.body.classList.add('modal-open');
-    });
-  }
-});
-</script>
+
 
 </body></html>
